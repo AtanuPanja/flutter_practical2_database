@@ -33,27 +33,12 @@ class _UserListState extends State<UserList> {
     }
   }
 
+  // controllers for the text fields
+  // they are defined as a part of the state of the root widget
+  // and then passed into the child widgets when needed
   TextEditingController nameController = TextEditingController();
   TextEditingController genderController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-
-  // List userList = [
-  //   {
-  //     'name': 'Name1',
-  //     'gender': 'Male',
-  //     'phone': 'Phone1',
-  //   },
-  //   {
-  //     'name': 'Name2',
-  //     'gender': 'Female',
-  //     'phone': 'Phone2',
-  //   },
-  //   {
-  //     'name': 'Name3',
-  //     'gender': 'Other',
-  //     'phone': 'Phone3',
-  //   },
-  // ];
 
   // adding user - changing the data
   void addUserToList() {
@@ -64,15 +49,19 @@ class _UserListState extends State<UserList> {
       var newUser = {'name': name, 'gender': gender, 'phone': phone};
 
       setState(() {
+        // adding the user to the hive database
         userDB.userList.add(newUser);
         userDB.updateDatabase();
 
         Navigator.of(context).pop();
+        // clearing the controllers everytime a new user is created
+        // this would ensure that the next time, add user page must have empty fields
         nameController.clear();
         genderController.clear();
         phoneController.clear();
       });
     } else {
+      // showing an alert on the screen, for validation of the fields
       showDialog(
         context: context,
         builder: (context) {
@@ -108,6 +97,8 @@ class _UserListState extends State<UserList> {
   }
 
   // adding user - passed as callback to the button
+  // this callback, passes the controllers, and the addUserToList action, to the AddUser route
+  // there onSubmit action triggers the addUserToList action here.
   void addUser() {
     Navigator.push(
       context,
@@ -123,6 +114,7 @@ class _UserListState extends State<UserList> {
   }
 
   // deleting user - performing updation on the data
+  // deleting the data from the hive database, and then updating the database
   void deleteUserFromList(int index) {
     setState(() {
       userDB.userList.removeAt(index);
@@ -133,6 +125,8 @@ class _UserListState extends State<UserList> {
   }
 
   // deleting user - passed as callback to the button
+  // this callback shows a dialog box, to ask for confirmation before deleting
+  // an index of the user is passed into the deleteUserFromList method, to ensure only that entry gets deleted
   void deleteUser(int index) {
     showDialog(
       context: context,
@@ -170,6 +164,8 @@ class _UserListState extends State<UserList> {
   }
 
   // editing user - edit the user data in the list
+  // edit/update the user data in the database
+  // edits the user at the index passed from the calling method
   void editUserInList(int index) {
     String name = nameController.value.text;
     String gender = genderController.value.text;
@@ -223,6 +219,8 @@ class _UserListState extends State<UserList> {
   }
 
   // editing user - passed as callback to the button
+  // this callback passes the current data, the controllers for the textfields,
+  // and the editUserInList action method with the value of the index to edit
   void editUser(int index) {
     Navigator.push(
         context,
@@ -274,6 +272,7 @@ class UserTile extends StatelessWidget {
   final String name;
   final String gender;
   final String phone;
+  // used VoidCallback as types for the methods being passed into the parameters
   final VoidCallback editUser;
   final VoidCallback deleteUser;
 

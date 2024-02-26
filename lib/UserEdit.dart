@@ -10,6 +10,10 @@ class UserEdit extends StatelessWidget {
     required this.onSubmit,
   });
 
+  // getting the currentData of the user,
+  // and then filling the controllers with that data, such that
+  // the it can be updated easily
+  // this is different from the add user page, where the fields are empty
   final Map userCurrentData;
   final TextEditingController nameController;
   final TextEditingController genderController;
@@ -65,6 +69,7 @@ class UserInputField extends StatelessWidget {
     required this.icon,
   });
   
+  // setting the initialText with the user's current data
   final String initialText;
   final TextEditingController controller;
   final String placeholder;
